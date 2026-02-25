@@ -1,12 +1,7 @@
-
 import WeatherApp from "./weatherApp"
 
 function App() {
-  return (
-    <>
-      <WeatherApp></WeatherApp>
-    </>
-  )
+  return <WeatherApp />
 }
 
 export default App

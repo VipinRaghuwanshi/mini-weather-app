@@ -1,10 +1,48 @@
-.InfoBox{
-    text-align: center;
+.InfoBox {
+  text-align: center;
 }
-.cardContainer{
-    display: flex;
-    justify-content: center;
+
+.glass-card {
+  background: transparent !important;
+  box-shadow: none !important;
 }
-.card{
-  background-color:#cfccc9;
+
+.card {
+  text-align: center;
+  color: #000;
+}
+
+/* Layout */
+.main-weather {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 60px;
+}
+
+.city {
+  font-weight: 700;
+  font-size: 36px;
+}
+
+.temp {
+  font-size: 48px;
+  font-weight: 700;
+  margin: 10px 0;
+}
+
+/* Bottom small cards */
+.forecast-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 50px;
+}
+
+.forecast-box {
+  background: rgba(255, 255, 255, 0.4);
+  padding: 18px;
+  border-radius: 20px;
+  width: 22%;
+  backdrop-filter: blur(15px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
 }

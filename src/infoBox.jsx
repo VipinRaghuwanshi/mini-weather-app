@@ -1,51 +1,128 @@
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
-import "./infoBox.css";
-import ThunderstormIcon from '@mui/icons-material/Thunderstorm';
-import AcUnitIcon from '@mui/icons-material/AcUnit';
-import WbSunnyIcon from '@mui/icons-material/WbSunny';
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 
-export default function InfoBox({info}) {
-    const INIT_URL = "https://images.unsplash.com/photo-1672638921456-42f48533aef1?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8c2ltcGxlJTIwd2VhdGhlcnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&q=60&w=500";
-    const COLD_URL = "https://images.unsplash.com/photo-1491002052546-bf38f186af56?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fHNub3d8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&q=60&w=500";
-    const HOT_URL = "https://images.unsplash.com/photo-1504370805625-d32c54b16100?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8SG90JTIwd2VhdGhlcnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&q=60&w=500";
-    const RAIN_URL = "https://images.unsplash.com/photo-1438449805896-28a666819a20?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cmFpbmluZ3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&q=60&w=500"
-    return (
-        <div className='InfoBox'>
-            <div className='cardContainer'>
-            <Card sx={{ maxWidth: 345 }}>
-      <CardMedia
-        sx={{ height: 140 }}
-        image={
-            info.humidity > 80
-                ? RAIN_URL
-                : info.temp > 15
-                ? HOT_URL
-                :COLD_URL
-        }
-      />
-      <CardContent className='card'>
-        <Typography gutterBottom variant="h5" component="div">
-            {info.city}{
-                info.humidity > 80
-                ? <ThunderstormIcon></ThunderstormIcon>
-                : info.temp > 15
-                ? <WbSunnyIcon></WbSunnyIcon>
-                :<AcUnitIcon></AcUnitIcon>
-          }
-        </Typography>
-        <Typography variant="body2" component="div">
-                        <p>Temperature = {info.temp}&deg;C</p>
-                        <p>Humidity = {info.humidity}</p>
-                        <p>Min Temp = {info.temp_min}&deg;C</p>
-                        <p>Max Temp = {info.temp_max}&deg;C</p>
-                        <p>The weather can be described as <i>{info.weather}</i> and feels like {info.feelsLike}&deg;C</p>
-        </Typography>
+import WbSunnyIcon from "@mui/icons-material/WbSunny";
+import ThunderstormIcon from "@mui/icons-material/Thunderstorm";
+import AcUnitIcon from "@mui/icons-material/AcUnit";
+import CloudIcon from "@mui/icons-material/Cloud";
+import GrainIcon from "@mui/icons-material/Grain";
+import WaterDropIcon from "@mui/icons-material/WaterDrop";
+
+export default function InfoBox({ info }) {
+
+  const getWeatherIcon = () => {
+    const weather = info.weather.toLowerCase();
+
+    if (weather.includes("rain") || weather.includes("drizzle")) {
+      return <GrainIcon sx={{ fontSize: 120, color: "#2196f3" }} />;
+    } 
+    else if (weather.includes("cloud")) {
+      return <CloudIcon sx={{ fontSize: 120, color: "#90a4ae" }} />;
+    } 
+    else if (weather.includes("thunder")) {
+      return <ThunderstormIcon sx={{ fontSize: 120, color: "#ff9800" }} />;
+    } 
+    else if (weather.includes("snow") || info.temp < 5) {
+      return <AcUnitIcon sx={{ fontSize: 120, color: "#03a9f4" }} />;
+    } 
+    else if (weather.includes("mist") || weather.includes("haze")) {
+      return <WaterDropIcon sx={{ fontSize: 120, color: "#607d8b" }} />;
+    }
+    else {
+      return <WbSunnyIcon sx={{ fontSize: 120, color: "#fbc02d" }} />;
+    }
+  };
+
+  return (
+    <Card sx={{ padding: 5, borderRadius: 6 }}>
+      <CardContent>
+
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 6,
+            mb: 4
+          }}
+        >
+          {getWeatherIcon()}
+
+          <Box>
+            <Typography variant="h4" fontWeight="600">
+              {info.city}
+            </Typography>
+
+            <Typography variant="h2" fontWeight="700">
+              {info.temp}°C
+            </Typography>
+
+            <Typography>
+              {info.weather} • Feels like {info.feelsLike}°C
+            </Typography>
+          </Box>
+        </Box>
+
+        {/* Bottom Glass Cards */}
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            gap: 3,
+          }}
+        >
+          <Box
+            sx={{
+              flex: 1,
+              background: "rgba(255,255,255,0.5)",
+              backdropFilter: "blur(10px)",
+              borderRadius: 4,
+              padding: 2,
+              textAlign: "center",
+              boxShadow: "0 5px 15px rgba(0,0,0,0.1)"
+            }}
+          >
+            💧
+            <Typography variant="body2">Humidity</Typography>
+            <Typography fontWeight="600">{info.humidity}%</Typography>
+          </Box>
+
+          <Box
+            sx={{
+              flex: 1,
+              background: "rgba(255,255,255,0.5)",
+              backdropFilter: "blur(10px)",
+              borderRadius: 4,
+              padding: 2,
+              textAlign: "center",
+              boxShadow: "0 5px 15px rgba(0,0,0,0.1)"
+            }}
+          >
+            🌡
+            <Typography variant="body2">Min</Typography>
+            <Typography fontWeight="600">{info.temp_min}°C</Typography>
+          </Box>
+
+          <Box
+            sx={{
+              flex: 1,
+              background: "rgba(255,255,255,0.5)",
+              backdropFilter: "blur(10px)",
+              borderRadius: 4,
+              padding: 2,
+              textAlign: "center",
+              boxShadow: "0 5px 15px rgba(0,0,0,0.1)"
+            }}
+          >
+            🔥
+            <Typography variant="body2">Max</Typography>
+            <Typography fontWeight="600">{info.temp_max}°C</Typography>
+          </Box>
+        </Box>
+
       </CardContent>
     </Card>
-    </div>
-        </div>
-    )
+  );
 }

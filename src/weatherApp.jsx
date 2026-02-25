@@ -1,32 +1,23 @@
-import { useState } from "react"
-import SearchBox from "./searchBox"
-import InfoBox from "./infoBox"
+import { useState } from "react";
+import SearchBox from "./searchBox";
+import InfoBox from "./infoBox";
 import "./weatherApp.css";
 
 export default function WeatherApp() {
-    const [ weatherInfo, setWeatherInfo ] = useState({
-        city: "Delhi",
-        feelsLike: 24.84,
-        temp: 25.05,
-        temp_min: 25.05,
-        temp_max: 25.05,
-        humidity: 47,
-        weather: "haze"
-    });
+  const [weatherInfo, setWeatherInfo] = useState(null);
 
-    let updateInfo =(newInfo)=> {
-        setWeatherInfo(newInfo);
+  const updateInfo = (newInfo) => {
+    if (newInfo) {
+      setWeatherInfo(newInfo);
     }
-    return (
-        <div className="weather-container">
-      <video autoPlay loop muted playsInline className="background-video">
-        <source src="/weather.mp4" type="video/mp4" />
-      </video>
-        <div style={{ textAlign: "center" }}>
-            <h2 style={{color:"pink"}}>Mini Weather App</h2>
-            <SearchBox updateInfo={updateInfo}></SearchBox>
-            <InfoBox info={weatherInfo}></InfoBox>
-            </div>
-        </div>
-    )
+  };
+
+  return (
+    <div className="weather-container">
+      <div className="weather-content">
+        <SearchBox updateInfo={updateInfo} />
+        {weatherInfo && <InfoBox info={weatherInfo} />}
+      </div>
+    </div>
+  );
 }

@@ -1,66 +1,100 @@
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import "./searchBox.css"
-import { useState } from 'react';
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import { useState } from "react";
+import SearchIcon from "@mui/icons-material/Search";
 
-export default function SearchBox({updateInfo}) {
-    let [city, setCity] = useState("");
-    let [error, setError] = useState(false);
+export default function SearchBox({ updateInfo }) {
+    const [city, setCity] = useState("");
+    const [error, setError] = useState("");
 
-    let API_URL = "http://api.openweathermap.org/data/2.5/weather"
-    let API_KEY = "14f7707e7fade8df0b71693d1a85309c"
+    const API_URL = "https://api.openweathermap.org/data/2.5/weather";
+    const API_KEY = "e5e122abcee3ffa7217f176ad5f7a697"; 
+    const getWeatherInfo = async () => {
+        const response = await fetch(
+            `${API_URL}?q=${city}&appid=${API_KEY}&units=metric`
+        );
 
-    let getWeatherInfo = async () => {
-        try {
-            let response = await fetch(`${API_URL}?q=${city}&appid=${API_KEY}&units=metric`);
-        let jsonResponce = await response.json();
-        let result = {
-            city:city,
-            temp: jsonResponce.main.temp,
-            temp_min: jsonResponce.main.temp_min,
-            temp_max: jsonResponce.main.temp_max,
-            humidity: jsonResponce.main.humidity,
-            feelsLike: jsonResponce.main.feels_like,
-            weather: jsonResponce.weather[0].description
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error("City not found");
+        }
+
+        return {
+            city: data.name,
+            temp: data.main.temp,
+            temp_min: data.main.temp_min,
+            temp_max: data.main.temp_max,
+            humidity: data.main.humidity,
+            feelsLike: data.main.feels_like,
+            weather: data.weather[0].description,
         };
-        console.log(result);
-        return result;
-        } catch (err) {
-            throw err;
+    };
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        if (city.trim() === "") {
+            setError("Please enter a city name");
+            return;
         }
-    }
 
-    let handleachange = (event) => {
-        setCity(event.target.value);
-    }
-
-    let handleSubmit = async(event) => {
         try {
-            event.preventDefault();
-            console.log(city);
-            setCity("");
-            let newInfo = await getWeatherInfo();
+            const newInfo = await getWeatherInfo();
             updateInfo(newInfo);
-        } catch (err) {
-            setError(true);
+            setError("");
+            setCity("");
+        } catch {
+            setError("No such place exists!");
+            updateInfo(null);
         }
-    }
+    };
+
     return (
-        <div className='searchBox'>
+        <div style={{ marginBottom: "30px" }}>
+            <h2
+                style={{
+                    fontSize: "22px",
+                    fontWeight: 600,
+                    color: "#0d3b66"
+                }}
+            >
+                🌤️ Weather App
+            </h2>
+            <br />
             <form onSubmit={handleSubmit}>
-                <TextField id="city" label="City Name"
+                <TextField
+                    label="Enter City"
+                    variant="outlined"
                     value={city}
-                    onChange={handleachange}
-                    variant='outlined' sx={{
-                        '& .MuiOutlinedInput-root fieldset': { borderColor: '#E6D8C3' },
-                        '& .MuiInputLabel-root': { color: '#E6D8C3' }
-                    }} /> 
-                <br></br><br></br>
-                <Button variant="contained" style={{ backgroundColor: "#C5C7BC" , color:"black"}}
-                    type='submit'>Search</Button>
-                {error && <p style={{color:"red"}}>No such place exists!</p>}
+                    onChange={(e) => setCity(e.target.value)}
+                    fullWidth
+                    sx={{
+                        backgroundColor: "rgba(255,255,255,0.8)",
+                        borderRadius: "30px",
+                        "& fieldset": { borderRadius: "30px" },
+                    }}
+                />
+
+                <Button
+                    type="submit"
+                    variant="contained"
+                    startIcon={<SearchIcon />}
+                    sx={{
+                        marginTop: "20px",
+                        borderRadius: "30px",
+                        padding: "12px 30px",
+                        fontWeight: "600",
+                        background: "linear-gradient(135deg, #4facfe, #00f2fe)",
+                    }}
+                >
+                    Search
+                </Button>
+
+                {error && (
+                    <p style={{ color: "red", marginTop: "15px" }}>{error}</p>
+                )}
             </form>
         </div>
-    
-    )
+    );
 }
